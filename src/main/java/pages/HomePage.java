@@ -6,8 +6,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 
-public class HomePage {
+import base.BasePage;
 
+public class HomePage extends BasePage {
+//	After you add the extends BasePage, it will give an error that you need a constructor for this method too:
+	public HomePage(WebDriver driver) {
+		super(driver);
+	}
+	
+	
 //	We are defining the elements for the page at the very beginning: (In other setup methods we may use an OR.properties file to store these selectors, but not in POM) -- The Below is Page Factory, aka the annotations:
 
 	@FindBy(id="email")
@@ -35,16 +42,19 @@ public class HomePage {
 //	} 
 	
 //	OPTION 3:
-	public HomePage(WebDriver driver) {
+//	public HomePage(WebDriver driver) {
 		
-		PageFactory.initElements(driver, this);// Note that because we are in Homepage, we aren't writing HomePage.class, instead, we are using this as the second parameter.
-	}
+//		PageFactory.initElements(driver, this);// Note that because we are in Homepage, we aren't writing HomePage.class, instead, we are using this as the second parameter.
+//	}
+	
+//	OPTION 4:
+//		We moved the above option 3 into the BasePage file so we don't have to duplicate the code in all of the --Page files.
 	
 	
 	
 //	Each method is to test a functionality on the page:
 	
-	public void doLogin(String username, String password) {
+	public LandingPage doLogin(String username, String password) {
 		
 //		usrname.sendKeys(username);
 //		pass.sendKeys(password);
@@ -53,6 +63,8 @@ public class HomePage {
 		driver.findElement(By.id("email")).sendKeys(username);
 		driver.findElement(By.id("pass")).sendKeys(password);
 		driver.findElement(By.id("loginbutton")).click();
+		
+		return new LandingPage(driver); //After logging in, we should be on the landing page. So here we are returning an instance of LandingPage, passing on our driver, so the driver remains the same in this session. (As we start with the homepage and then go to the landing page after the login is completed.)
 		
 	}
 	
